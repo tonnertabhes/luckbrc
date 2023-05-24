@@ -1,0 +1,51 @@
+.Navbar {
+  display: flex;
+  height: 10vh;
+  width: 100vw;
+  align-items: center;
+  font-family: "Instrument Sans";
+}
+
+.logo {
+  margin-left: 10%;
+  width: 3em;
+}
+
+.logo-text {
+  margin-left: 0.5em;
+  font-weight: 700;
+  font-size: 2em;
+}
+
+.navbar-text {
+  list-style: none;
+  font-size: large;
+  font-weight: 500;
+  transition: 0.1s;
+}
+
+.navbar-text:hover {
+  cursor: pointer;
+  transform: translateY(-1px);
+  transition: 0.1s;
+}
+
+.navbar-links {
+  text-decoration: none;
+  color: inherit;
+}
+
+.menu-bars {
+  margin-right: 10vw;
+  margin-left: auto;
+}
+
+.desktop-nav {
+  margin-left: 5vw;
+  margin-right: 10vw;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

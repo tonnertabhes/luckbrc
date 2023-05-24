@@ -1,0 +1,12 @@
+.WalletConnect {
+  border: none;
+  padding: 1em;
+  border-radius: 0.5em;
+  transition: 0.2s;
+  background-color: rgb(240, 240, 240);
+}
+
+.WalletConnect:hover {
+  cursor: pointer;
+  background-color: gold;
+}

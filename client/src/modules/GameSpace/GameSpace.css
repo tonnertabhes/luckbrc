@@ -1,0 +1,17 @@
+.GameSpace {
+  width: 500px;
+  height: 400px;
+  margin: 1em;
+  max-width: 90%;
+  background-color: rgb(230, 230, 230);
+  border-radius: 0.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.GameSpace:hover {
+  background-color: rgb(201, 201, 201);
+  transition: 0.2s;
+}
