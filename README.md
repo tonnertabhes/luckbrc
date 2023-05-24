@@ -1,6 +1,6 @@
 # Running the App
 
-In order to run the app, use the following command:
+In order to run the app, navigate to the client folder and use the following command:
 
 ### `npm run start`
 
