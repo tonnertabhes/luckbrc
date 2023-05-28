@@ -1,5 +1,5 @@
-module main
+module chat_app
 
 go 1.19
 
-require github.com/gorilla/websocket v1.5.0 // indirect
+require golang.org/x/net v0.10.0 // indirect

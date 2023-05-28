@@ -29,6 +29,7 @@ export default function WalletConnect({
     try {
       let accounts = await window.unisat.requestAccounts();
       setUserBtcAddress(accounts[0]);
+      localStorage.setItem("BTC_ADDRESS", accounts[0]);
     } catch (error) {
       console.log("Unisat Connection Failed");
       console.log(error);
