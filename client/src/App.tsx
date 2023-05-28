@@ -10,6 +10,12 @@ function App() {
   const [userBtcAddress, setUserBtcAddress] = useState("");
 
   useEffect(() => {
+    if (localStorage.getItem("BTC_ADDRESS")) {
+      setUserBtcAddress(localStorage.getItem("BTC_ADDRESS") as string);
+    }
+  }, []);
+
+  useEffect(() => {
     if (window.innerWidth < 1100) {
       setMobile(true);
     }

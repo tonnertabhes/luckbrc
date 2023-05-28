@@ -3,7 +3,7 @@
   height: 400px;
   margin: 1em;
   max-width: 90%;
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(201, 201, 201);
   border-radius: 0.5em;
   display: flex;
   justify-content: center;
@@ -12,6 +12,6 @@
 }
 
 .Games:hover {
-  background-color: rgb(201, 201, 201);
+  background-color: rgb(230, 230, 230);
   transition: 0.2s;
 }
