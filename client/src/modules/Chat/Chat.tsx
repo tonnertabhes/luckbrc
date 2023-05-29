@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
 import "./Chat.css";
 
-interface Chat {
+interface ChatInterface {
   userBtcAddress: string;
 }
 
-const socket = new WebSocket("ws://127.0.0.1:8080/ws");
-
-export default function Chat({ userBtcAddress }: Chat) {
+export default function Chat({ userBtcAddress }: ChatInterface) {
+  const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState<Array<string>>([]);
 
   useEffect(() => {
-    if (!isSocketOpen(socket)) return;
-    socket.onmessage = (e) => {
-      setChatLog((chatLog) => [...chatLog, e.data]);
-    };
+    if (socket === null) {
+      setSocket(new WebSocket("ws://localhost:8080/ws"));
+    }
+
+    // return () => {
+    //   if (!socket) return;
+    //   socket.close();
+    // };
   }, [socket]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    socket.addEventListener("message", handleMessage);
+  }, [socket]);
+
+  function handleMessage(e: MessageEvent<any>) {
+    setChatLog((chatLog) => [...chatLog, e.data]);
+  }
 
   function isSocketOpen(ws: WebSocket) {
     return ws.readyState === ws.OPEN;
@@ -28,15 +40,19 @@ export default function Chat({ userBtcAddress }: Chat) {
 
   function sendMessage(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
+    if (message === "") return;
+    if (socket === null) return;
     const currentTime = new Date();
     if (!isSocketOpen(socket)) return;
     try {
       socket.send(
         `${currentTime.getHours().toString()}:${currentTime
           .getMinutes()
-          .toString()}:${currentTime
-          .getSeconds()
-          .toString()}  ${userBtcAddress.substring(0, 3)}...: ${message}`
+          .toString()}:${
+          currentTime.getSeconds().toString().length === 1
+            ? "0" + currentTime.getSeconds().toString()
+            : currentTime.getSeconds().toString()
+        }  ${userBtcAddress.substring(0, 3)}...: ${message}`
       );
     } catch (err) {
       console.log(err);
@@ -48,9 +64,16 @@ export default function Chat({ userBtcAddress }: Chat) {
   return (
     <div className="Chat">
       <div className="chatLog">
-        {chatLog.map((item, index) => {
-          return <div key={index}>{item}</div>;
-        })}
+        {chatLog
+          .slice(0)
+          .reverse()
+          .map((item, index) => {
+            return (
+              <div className="messageText" key={index}>
+                {item}
+              </div>
+            );
+          })}
       </div>
       <form>
         <input

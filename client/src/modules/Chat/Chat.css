@@ -53,8 +53,14 @@
 }
 
 .chatLog {
-  overflow-y: scroll;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
   text-align: left;
   word-wrap: break-word;
   width: 100%;
+}
+
+.messageText {
+  font-family: "Courier New", Courier, monospace;
 }
