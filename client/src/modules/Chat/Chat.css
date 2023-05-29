@@ -60,3 +60,7 @@
   word-wrap: break-word;
   width: 100%;
 }
+
+.messageText {
+  font-family: "Courier New", Courier, monospace;
+}

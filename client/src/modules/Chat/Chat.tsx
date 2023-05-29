@@ -23,12 +23,10 @@ export default function Chat({ userBtcAddress }: ChatInterface) {
 
   useEffect(() => {
     if (socket === null) return;
-    if (!isSocketOpen(socket)) return;
-    socket.onmessage = (e) => handleMessage(e);
+    socket.addEventListener("message", handleMessage);
   }, [socket]);
 
   function handleMessage(e: MessageEvent<any>) {
-    console.log(e);
     setChatLog((chatLog) => [...chatLog, e.data]);
   }
 
@@ -41,18 +39,20 @@ export default function Chat({ userBtcAddress }: ChatInterface) {
   }
 
   function sendMessage(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    console.log(socket);
-    if (socket === null) return;
     e.preventDefault();
+    if (message === "") return;
+    if (socket === null) return;
     const currentTime = new Date();
     if (!isSocketOpen(socket)) return;
     try {
       socket.send(
         `${currentTime.getHours().toString()}:${currentTime
           .getMinutes()
-          .toString()}:${currentTime
-          .getSeconds()
-          .toString()}  ${userBtcAddress.substring(0, 3)}...: ${message}`
+          .toString()}:${
+          currentTime.getSeconds().toString().length === 1
+            ? "0" + currentTime.getSeconds().toString()
+            : currentTime.getSeconds().toString()
+        }  ${userBtcAddress.substring(0, 3)}...: ${message}`
       );
     } catch (err) {
       console.log(err);
@@ -64,9 +64,16 @@ export default function Chat({ userBtcAddress }: ChatInterface) {
   return (
     <div className="Chat">
       <div className="chatLog">
-        {chatLog.map((item, index) => {
-          return <div key={index}>{item}</div>;
-        })}
+        {chatLog
+          .slice(0)
+          .reverse()
+          .map((item, index) => {
+            return (
+              <div className="messageText" key={index}>
+                {item}
+              </div>
+            );
+          })}
       </div>
       <form>
         <input
