@@ -11,18 +11,21 @@ type Server struct {
 	conns map[*websocket.Conn]bool
 }
 
-func NewServer() *Server {
-	return &Server{
-		conns: make(map[*websocket.Conn]bool),
-	}
-}
-
 func (s *Server) handleWS(ws *websocket.Conn) {
 	fmt.Println("New Incoming Connection From Client: ", ws.RemoteAddr())
 
 	s.conns[ws] = true
 
 	s.readLoop(ws)
+}
+
+func (s *Server) broadCastMessage(msg []byte) {
+	for i, b := range s.conns {
+		if !b {
+			continue
+		}
+		i.Write(msg)
+	}
 }
 
 func (s *Server) readLoop(ws *websocket.Conn) {
@@ -38,6 +41,6 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 		}
 		msg := buffer[:n]
 		fmt.Println(string(msg))
-		ws.Write(msg)
+		s.broadCastMessage(msg)
 	}
 }

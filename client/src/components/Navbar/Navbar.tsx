@@ -41,7 +41,12 @@ export default function Navbar({
         <div className="desktop-nav">
           {NavbarData.map((item, index) => {
             return (
-              <a target="_blanK" className="navbar-links" href={item.path}>
+              <a
+                target="_blanK"
+                className="navbar-links"
+                key={index}
+                href={item.path}
+              >
                 <li className={item.cName} key={index}>
                   {item.name}
                 </li>

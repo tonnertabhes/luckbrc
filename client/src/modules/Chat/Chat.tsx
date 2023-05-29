@@ -1,22 +1,36 @@
 import React, { useEffect, useState } from "react";
 import "./Chat.css";
 
-interface Chat {
+interface ChatInterface {
   userBtcAddress: string;
 }
 
-const socket = new WebSocket("ws://127.0.0.1:8080/ws");
-
-export default function Chat({ userBtcAddress }: Chat) {
+export default function Chat({ userBtcAddress }: ChatInterface) {
+  const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState<Array<string>>([]);
 
   useEffect(() => {
-    if (!isSocketOpen(socket)) return;
-    socket.onmessage = (e) => {
-      setChatLog((chatLog) => [...chatLog, e.data]);
-    };
+    if (socket === null) {
+      setSocket(new WebSocket("ws://localhost:8080/ws"));
+    }
+
+    // return () => {
+    //   if (!socket) return;
+    //   socket.close();
+    // };
   }, [socket]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    if (!isSocketOpen(socket)) return;
+    socket.onmessage = (e) => handleMessage(e);
+  }, [socket]);
+
+  function handleMessage(e: MessageEvent<any>) {
+    console.log(e);
+    setChatLog((chatLog) => [...chatLog, e.data]);
+  }
 
   function isSocketOpen(ws: WebSocket) {
     return ws.readyState === ws.OPEN;
@@ -27,6 +41,8 @@ export default function Chat({ userBtcAddress }: Chat) {
   }
 
   function sendMessage(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    console.log(socket);
+    if (socket === null) return;
     e.preventDefault();
     const currentTime = new Date();
     if (!isSocketOpen(socket)) return;
