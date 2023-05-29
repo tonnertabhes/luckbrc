@@ -1,6 +1,10 @@
 # Running the App
 
-In order to run the app, navigate to the client folder and use the following command:
+In order to run the app, you must first run the API. To do this, navigate to the api folder and type:
+
+### `go run *go`
+
+After this is running, in a new terminal open the client folder and type:
 
 ### `npm run start`
 
