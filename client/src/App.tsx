@@ -4,10 +4,12 @@ import Navbar from "./components/Navbar/Navbar";
 import Games from "./modules/Games/Games";
 import GameSpace from "./modules/GameSpace/GameSpace";
 import Chat from "./modules/Chat/Chat";
+import { getUsername } from "./handlers/handlers";
 
 function App() {
   const [mobile, setMobile] = useState(false);
   const [userBtcAddress, setUserBtcAddress] = useState("");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("BTC_ADDRESS")) {
@@ -36,6 +38,8 @@ function App() {
   return (
     <div className="App">
       <Navbar
+        username={username}
+        setUsername={setUsername}
         userBtcAddress={userBtcAddress}
         setUserBtcAddress={setUserBtcAddress}
         mobile={mobile}
@@ -43,7 +47,7 @@ function App() {
       <div className="modules">
         <Games />
         <GameSpace />
-        <Chat userBtcAddress={userBtcAddress} />
+        <Chat username={username} userBtcAddress={userBtcAddress} />
       </div>
     </div>
   );

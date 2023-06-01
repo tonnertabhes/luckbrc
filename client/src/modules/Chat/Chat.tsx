@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./Chat.css";
+import { createUsername } from "../../handlers/handlers";
 
 interface ChatInterface {
   userBtcAddress: string;
+  username: string;
 }
 
-export default function Chat({ userBtcAddress }: ChatInterface) {
+export default function Chat({ username, userBtcAddress }: ChatInterface) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState<Array<string>>([]);
@@ -61,36 +63,71 @@ export default function Chat({ userBtcAddress }: ChatInterface) {
     setMessage("");
   }
 
-  return (
-    <div className="Chat">
-      <div className="chatLog">
-        {chatLog
-          .slice(0)
-          .reverse()
-          .map((item, index) => {
-            return (
-              <div className="messageText" key={index}>
-                {item}
-              </div>
-            );
-          })}
-      </div>
-      <form>
-        <input
-          className="chatInput"
-          onChange={(e) => handleInputChange(e)}
-          placeholder="Be Kind."
-          type="text"
-          value={message}
-        />
-        <button
-          className="sendButton"
-          type="submit"
-          onClick={(e) => sendMessage(e)}
-        >
-          Send
-        </button>
-      </form>
-    </div>
-  );
+  switch (username) {
+    case "":
+      if (userBtcAddress === "") {
+        return <div className="Chat">Please connect your wallet!</div>;
+      }
+      return (
+        <div className="Chat">
+          <p>Please create a Username</p>
+          <form>
+            <input
+              className="chatInput"
+              onChange={(e) => handleInputChange(e)}
+              placeholder="Enter Username (max 12 characters)"
+              type="text"
+              value={message}
+            />
+            <button
+              className="sendButton"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                if (message.length > 12) {
+                  window.alert("Username must be less than 12 characters");
+                  return;
+                }
+                createUsername(message, userBtcAddress);
+              }}
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      );
+    default:
+      return (
+        <div className="Chat">
+          <div className="chatLog">
+            {chatLog
+              .slice(0)
+              .reverse()
+              .map((item, index) => {
+                return (
+                  <div className="messageText" key={index}>
+                    {item}
+                  </div>
+                );
+              })}
+          </div>
+          <form>
+            <input
+              className="chatInput"
+              onChange={(e) => handleInputChange(e)}
+              placeholder="Be Kind."
+              type="text"
+              value={message}
+            />
+            <button
+              className="sendButton"
+              type="submit"
+              onClick={(e) => sendMessage(e)}
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      );
+  }
 }

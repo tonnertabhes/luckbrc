@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./WalletConnect.css";
+import { getUsername } from "../../handlers/handlers";
 
 declare global {
   interface Window {
@@ -9,13 +10,32 @@ declare global {
 
 interface WalletConnect {
   userBtcAddress: string;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
   setUserBtcAddress: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function WalletConnect({
+  username,
+  setUsername,
   userBtcAddress,
   setUserBtcAddress,
 }: WalletConnect) {
+  useEffect(() => {
+    if (userBtcAddress === "") return;
+    interface result {
+      message: string;
+      username: string;
+    }
+    getUsername(userBtcAddress).then((result: result) => {
+      if (!result.username) {
+        setUsername("");
+        return;
+      }
+      setUsername(result.username);
+    });
+  }, [userBtcAddress]);
+
   async function unisatConnect() {
     if (typeof window.unisat === "undefined") {
       window.alert("Please Install Unisat Wallet!");

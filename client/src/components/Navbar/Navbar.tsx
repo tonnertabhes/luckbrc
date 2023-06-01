@@ -9,12 +9,16 @@ import WalletConnect from "../WalletConnect/WalletConnect";
 interface Navbar {
   mobile: boolean;
   userBtcAddress: string;
+  username: string;
   setUserBtcAddress: React.Dispatch<React.SetStateAction<string>>;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Navbar({
   mobile,
   userBtcAddress,
+  username,
+  setUsername,
   setUserBtcAddress,
 }: Navbar) {
   const [menuActive, setMenuActive] = useState(false);
@@ -26,6 +30,8 @@ export default function Navbar({
       {mobile ? (
         <>
           <MobileMenu
+            username={username}
+            setUsername={setUsername}
             menuActive={menuActive}
             userBtcAddress={userBtcAddress}
             setUserBtcAddress={setUserBtcAddress}
@@ -54,8 +60,10 @@ export default function Navbar({
             );
           })}
           <WalletConnect
+            username={username}
             userBtcAddress={userBtcAddress}
             setUserBtcAddress={setUserBtcAddress}
+            setUsername={setUsername}
           />
         </div>
       )}
