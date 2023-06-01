@@ -47,7 +47,11 @@ function App() {
       <div className="modules">
         <Games />
         <GameSpace />
-        <Chat username={username} userBtcAddress={userBtcAddress} />
+        <Chat
+          username={username}
+          setUsername={setUsername}
+          userBtcAddress={userBtcAddress}
+        />
       </div>
     </div>
   );
