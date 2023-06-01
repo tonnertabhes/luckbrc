@@ -1,0 +1,37 @@
+.UserInfo {
+  background-color: rgba(0, 0, 0, 0.295);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userInfoModal {
+  width: 300px;
+  max-width: 90vw;
+  height: 300px;
+  background-color: rgb(201, 201, 201);
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.closeUserInfoBtn {
+  position: fixed;
+  margin-left: auto;
+  margin-right: 5%;
+  margin-top: 5%;
+  margin-bottom: auto;
+  opacity: 0.7;
+}
+
+.closeUserInfoBtn:hover {
+  cursor: pointer;
+}

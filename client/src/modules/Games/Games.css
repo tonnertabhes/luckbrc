@@ -6,6 +6,7 @@
   background-color: rgb(201, 201, 201);
   border-radius: 0.5em;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: 0.2s;
@@ -14,4 +15,34 @@
 .Games:hover {
   background-color: rgb(230, 230, 230);
   transition: 0.2s;
+}
+
+.gamesHeader {
+  position: relative;
+  width: 100%;
+  height: 12%;
+  display: flex;
+  align-items: center;
+  background-color: rgb(214, 214, 214);
+  border-radius: 0.5em 0.5em 0 0;
+  border-bottom: groove rgba(90, 90, 90, 0.342);
+  margin-top: 0;
+  margin-bottom: auto;
+}
+
+.gamesBody {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.gamesIcon {
+  opacity: 0.5;
+}
+
+.gamesText {
+  opacity: 0.5;
+  font-weight: bolder;
 }

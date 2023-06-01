@@ -21,6 +21,7 @@ export default function WalletConnect({
   userBtcAddress,
   setUserBtcAddress,
 }: WalletConnect) {
+  // This gets the username
   useEffect(() => {
     if (userBtcAddress === "") return;
     interface result {
@@ -44,6 +45,7 @@ export default function WalletConnect({
     }
     if (userBtcAddress !== "") {
       setUserBtcAddress("");
+      setUsername("");
       return;
     }
     try {

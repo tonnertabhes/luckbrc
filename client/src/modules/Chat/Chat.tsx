@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import { createUsername } from "../../handlers/handlers";
+import { BsFillPersonFill } from "react-icons/bs";
+import UserInfo from "../../modals/UserInfo/UserInfo";
 
 interface ChatInterface {
   userBtcAddress: string;
   username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Chat({ username, userBtcAddress }: ChatInterface) {
+export default function Chat({
+  username,
+  userBtcAddress,
+  setUsername,
+}: ChatInterface) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [message, setMessage] = useState("");
   const [chatLog, setChatLog] = useState<Array<string>>([]);
+  const [showUserInfo, setShowUserInfo] = useState(false);
 
   useEffect(() => {
     if (socket === null) {
@@ -28,6 +36,12 @@ export default function Chat({ username, userBtcAddress }: ChatInterface) {
     socket.addEventListener("message", handleMessage);
   }, [socket]);
 
+  useEffect(() => {
+    if (socket === null) return;
+    if (username === "") return;
+    socket.send(`${username} has entered the chat!`);
+  }, [socket, username]);
+
   function handleMessage(e: MessageEvent<any>) {
     setChatLog((chatLog) => [...chatLog, e.data]);
   }
@@ -40,22 +54,17 @@ export default function Chat({ username, userBtcAddress }: ChatInterface) {
     setMessage(e.target.value);
   }
 
-  function sendMessage(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function sendMessage(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    msg: string
+  ) {
     e.preventDefault();
     if (message === "") return;
     if (socket === null) return;
     const currentTime = new Date();
     if (!isSocketOpen(socket)) return;
     try {
-      socket.send(
-        `${currentTime.getHours().toString()}:${currentTime
-          .getMinutes()
-          .toString()}:${
-          currentTime.getSeconds().toString().length === 1
-            ? "0" + currentTime.getSeconds().toString()
-            : currentTime.getSeconds().toString()
-        }  ${userBtcAddress.substring(0, 3)}...: ${message}`
-      );
+      socket.send(msg);
     } catch (err) {
       console.log(err);
       return;
@@ -63,14 +72,51 @@ export default function Chat({ username, userBtcAddress }: ChatInterface) {
     setMessage("");
   }
 
+  function handleUsernameCreation(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    e.preventDefault();
+    if (message.length > 12) {
+      window.alert("Username must be less than 12 characters");
+      return;
+    }
+    createUsername(message, userBtcAddress);
+    setUsername(message);
+    setMessage("");
+  }
+
+  function chatHeader() {
+    return (
+      <header className="chatHeader">
+        <p className="headerText">Chat</p>
+        <BsFillPersonFill
+          className="chatHeaderIcon"
+          size={20}
+          onClick={() => setShowUserInfo(!showUserInfo)}
+        />
+        {showUserInfo ? (
+          <UserInfo username={username} setShowUserInfo={setShowUserInfo} />
+        ) : (
+          <></>
+        )}
+      </header>
+    );
+  }
+
   switch (username) {
     case "":
       if (userBtcAddress === "") {
-        return <div className="Chat">Please connect your wallet!</div>;
+        return (
+          <div className="Chat">
+            {chatHeader()}
+            <p className="chatWarningText">Please connect your wallet!</p>
+          </div>
+        );
       }
       return (
         <div className="Chat">
-          <p>Please create a Username</p>
+          {chatHeader()}
+          <p className="chatWarningText">Please create a Username</p>
           <form>
             <input
               className="chatInput"
@@ -83,12 +129,7 @@ export default function Chat({ username, userBtcAddress }: ChatInterface) {
               className="sendButton"
               type="submit"
               onClick={(e) => {
-                e.preventDefault();
-                if (message.length > 12) {
-                  window.alert("Username must be less than 12 characters");
-                  return;
-                }
-                createUsername(message, userBtcAddress);
+                handleUsernameCreation(e);
               }}
             >
               Send
@@ -99,6 +140,7 @@ export default function Chat({ username, userBtcAddress }: ChatInterface) {
     default:
       return (
         <div className="Chat">
+          {chatHeader()}
           <div className="chatLog">
             {chatLog
               .slice(0)
@@ -122,7 +164,7 @@ export default function Chat({ username, userBtcAddress }: ChatInterface) {
             <button
               className="sendButton"
               type="submit"
-              onClick={(e) => sendMessage(e)}
+              onClick={(e) => sendMessage(e, `${username}: ${message}`)}
             >
               Send
             </button>
