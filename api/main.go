@@ -39,6 +39,6 @@ func main() {
 	http.Handle("/ws", websocket.Handler(server.handleWS))
 	router.HandleFunc("/createuser", users.CreateUser).Methods("POST")
 	router.HandleFunc("/getuser/{wallet}", users.GetUser).Methods("GET")
-	router.HandleFunc("/updateuser", users.UpdateUser).Methods("PUT")
+	router.HandleFunc("/updateuser", users.UpdateUser).Methods("PUT", "OPTIONS")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

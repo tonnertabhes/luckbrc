@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=luckbrc
+      - MONGO_INITDB_USERNAME=admin
+      - MONGO_INITDB_PASSWORD=password
+    volumes:
+      - ./db-data/mongo/:/data/db
+    networks:
+      - shared-network
+
+  api:
+    container_name: luckbrc-api
+    restart: unless-stopped
+    image: luckbrc-api
+    build:
+      context: api
+      target: production
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - shared-network
+    depends_on:
+      - mongodb
+
+  client:
+    container_name: luckbrc-client
+    restart: unless-stopped
+    image: luckbrc-client
+    build:
+      context: client
+      target: production
+      dockerfile: Dockerfile
+    ports:
+      - 80:3000
+    networks:
+      - shared-network
+    depends_on:
+      - api
+
+networks:
+  shared-network:
