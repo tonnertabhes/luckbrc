@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -65,9 +66,18 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "OPTIONS" {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Methods", "PUT, OPTIONS")
+		w.WriteHeader(http.StatusOK)
+	}
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
 	var user User
 	err := json.NewDecoder(r.Body).Decode(&user)
+	fmt.Printf("%v", user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{ "message": "` + err.Error() + `" }`))
@@ -76,7 +86,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	collection := config.Client.Database("LUCKBRC").Collection("USERS")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
-	res, err := collection.UpdateOne(ctx, bson.M{"wallet": user.Wallet}, bson.M{"$set": user})
+	res, err := collection.UpdateOne(ctx, bson.M{"wallet": user.Wallet}, bson.M{"$set": bson.M{"username": user.Username}})
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{ "message": "` + err.Error() + `" }`))

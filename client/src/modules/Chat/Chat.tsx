@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Chat.css";
 import { createUsername } from "../../handlers/handlers";
 import { BsFillPersonFill } from "react-icons/bs";
+import { IoMdWallet } from "react-icons/io";
 import UserInfo from "../../modals/UserInfo/UserInfo";
 
 interface ChatInterface {
@@ -95,7 +96,13 @@ export default function Chat({
           onClick={() => setShowUserInfo(!showUserInfo)}
         />
         {showUserInfo ? (
-          <UserInfo username={username} setShowUserInfo={setShowUserInfo} />
+          <UserInfo
+            userBtcAddress={userBtcAddress}
+            username={username}
+            setUsername={setUsername}
+            socket={socket}
+            setShowUserInfo={setShowUserInfo}
+          />
         ) : (
           <></>
         )}
@@ -109,7 +116,10 @@ export default function Chat({
         return (
           <div className="Chat">
             {chatHeader()}
-            <p className="chatWarningText">Please connect your wallet!</p>
+            <div className="chatBody">
+              <IoMdWallet className="chatWalletIcon" size={120} />
+              <p className="chatWarningText">Please connect your wallet!</p>
+            </div>
           </div>
         );
       }

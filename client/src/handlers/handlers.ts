@@ -44,9 +44,12 @@ export async function createUsername(username: string, walletAddress: string) {
 
 export async function changeUsername(username: string, walletAddress: string) {
   var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "text/plain");
+  myHeaders.append("Content-Type", "application/json");
 
-  var raw = `{"username": "${username}","wallet": "${walletAddress}"}`;
+  var raw = JSON.stringify({
+    username: username,
+    wallet: walletAddress,
+  });
 
   var requestOptions: requestOptionsPost = {
     method: "PUT",
@@ -55,7 +58,9 @@ export async function changeUsername(username: string, walletAddress: string) {
     redirect: "follow",
   };
 
+  console.log(requestOptions);
   return await fetch("http://localhost:8080/updateuser", requestOptions)
     .then((response) => response.json())
+    .then((result) => console.log(result))
     .catch((error) => console.log("error", error));
 }
