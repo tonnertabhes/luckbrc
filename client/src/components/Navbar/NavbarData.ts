@@ -19,9 +19,9 @@ export const NavbarData = [
     cName: "navbar-text",
     path: "https://gate.io",
   },
-  {
-    name: "Telegram",
-    cName: "navbar-text",
-    path: "https://telegram.com",
-  },
+  // {
+  //   name: "Telegram",
+  //   cName: "navbar-text",
+  //   path: "https://telegram.com",
+  // },
 ];
