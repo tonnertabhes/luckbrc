@@ -10,6 +10,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /golang-api
+RUN go build -o chat-app
 
-CMD ["/golang-api"]
+CMD ["/chat-app"]
