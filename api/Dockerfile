@@ -10,6 +10,6 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o chat-app
+RUN go build chat_app
 
-CMD ["/chat-app"]
+CMD ["./chat_app"]
