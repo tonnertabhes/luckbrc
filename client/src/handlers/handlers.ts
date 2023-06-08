@@ -17,7 +17,7 @@ export async function getUsername(walletAddress: string) {
   };
 
   return await fetch(
-    "http://localhost:8080/getuser/" + walletAddress,
+    "http://luckbrc.com:8080/getuser/" + walletAddress,
     requestOptions
   )
     .then((response) => response.json())
@@ -37,7 +37,7 @@ export async function createUsername(username: string, walletAddress: string) {
     redirect: "follow",
   };
 
-  return await fetch("http://localhost:8080/createuser", requestOptions)
+  return await fetch("http://luckbrc.com:8080/createuser", requestOptions)
     .then((response) => response.json())
     .catch((error) => console.log("error", error));
 }
@@ -59,7 +59,7 @@ export async function changeUsername(username: string, walletAddress: string) {
   };
 
   console.log(requestOptions);
-  return await fetch("http://localhost:8080/updateuser", requestOptions)
+  return await fetch("http://luckbrc.com:8080/updateuser", requestOptions)
     .then((response) => response.json())
     .then((result) => console.log(result))
     .catch((error) => console.log("error", error));
