@@ -23,7 +23,7 @@ export default function Chat({
 
   useEffect(() => {
     if (socket === null) {
-      setSocket(new WebSocket("ws://localhost:8080/ws"));
+      setSocket(new WebSocket("ws://luckbrc.com/ws"));
     }
 
     // return () => {

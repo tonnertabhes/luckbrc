@@ -76,8 +76,8 @@ func main() {
 	fmt.Println("Server Booted on Port 8080")
 	http.Handle("/", router)
 	http.Handle("/ws", websocket.Handler(server.handleWS))
-	router.HandleFunc("/createuser", users.CreateUser).Methods("POST")
-	router.HandleFunc("/getuser/{wallet}", users.GetUser).Methods("GET")
+	router.HandleFunc("/createuser", users.CreateUser).Methods("POST", "OPTIONS")
+	router.HandleFunc("/getuser/{wallet}", users.GetUser).Methods("GET", "OPTIONS")
 	router.HandleFunc("/updateuser", users.UpdateUser).Methods("PUT", "OPTIONS")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
