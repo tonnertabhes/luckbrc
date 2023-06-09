@@ -17,7 +17,7 @@ export async function getUsername(walletAddress: string) {
   };
 
   return await fetch(
-    "https://luckbrc.com/getuser/" + walletAddress,
+    "https://luckbrc.com/api/getuser/" + walletAddress,
     requestOptions
   )
     .then((response) => response.json())
@@ -37,7 +37,7 @@ export async function createUsername(username: string, walletAddress: string) {
     redirect: "follow",
   };
 
-  return await fetch("https://luckbrc.com/createuser", requestOptions)
+  return await fetch("https://luckbrc.com/api/createuser", requestOptions)
     .then((response) => response.json())
     .catch((error) => console.log("error", error));
 }
@@ -59,7 +59,7 @@ export async function changeUsername(username: string, walletAddress: string) {
   };
 
   console.log(requestOptions);
-  return await fetch("https://luckbrc.com/updateuser", requestOptions)
+  return await fetch("https://luckbrc.com/api/updateuser", requestOptions)
     .then((response) => response.json())
     .then((result) => console.log(result))
     .catch((error) => console.log("error", error));
