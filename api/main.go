@@ -65,7 +65,7 @@ func main() {
 	server := NewServer()
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	config.Client, _ = mongo.NewClient(options.Client().ApplyURI("mongodb://luckbrc.com/mongodb"))
+	config.Client, _ = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	err := config.Client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
