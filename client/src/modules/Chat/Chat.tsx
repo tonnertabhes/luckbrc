@@ -59,7 +59,9 @@ export default function Chat({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     msg: string
   ) {
-    if (!isSocketOpen) return;
+    if (!isSocketOpen) {
+      () => setTimeout(sendMessage, 1000);
+    }
     e.preventDefault();
     if (message === "") return;
     if (socket === null) return;
