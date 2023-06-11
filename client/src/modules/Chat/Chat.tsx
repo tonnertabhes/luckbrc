@@ -25,6 +25,8 @@ export default function Chat({
     if (socket === null) {
       setSocket(new WebSocket("wss://luckbrc.com/ws"));
     }
+    if (username === "") return;
+    localStorage.setItem("connected", "true");
 
     // return () => {
     //   if (!socket) return;
@@ -42,12 +44,9 @@ export default function Chat({
   }, [socket, username]);
 
   function handleUserLoadPage() {
+    if (localStorage.getItem("connected") === "true") return;
     if (socket === null) return;
     if (username === "") return;
-    if (!isSocketOpen) {
-      setTimeout(() => handleUserLoadPage(), 1000);
-      return;
-    }
     socket.send(`${username} has entered the chat!`);
   }
 
