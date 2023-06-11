@@ -40,6 +40,7 @@ export default function Chat({
   }, [socket]);
 
   useEffect(() => {
+    if (socket === null) return;
     if (username === "") return;
     try {
       socket.send(`${username} has entered the chat!`);
