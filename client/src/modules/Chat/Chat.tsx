@@ -44,10 +44,12 @@ export default function Chat({
   }, [socket, username]);
 
   function handleUserLoadPage() {
-    if (localStorage.getItem("connected") === "true") return;
-    if (socket === null) return;
     if (username === "") return;
-    socket.send(`${username} has entered the chat!`);
+    try {
+      socket.send(`${username} has entered the chat!`);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   function handleMessage(e: MessageEvent<any>) {
