@@ -38,10 +38,18 @@ export default function Chat({
   }, [socket]);
 
   useEffect(() => {
+    handleUserLoadPage();
+  }, [socket, username]);
+
+  function handleUserLoadPage() {
     if (socket === null) return;
     if (username === "") return;
+    if (!isSocketOpen) {
+      setTimeout(() => handleUserLoadPage(), 1000);
+      return;
+    }
     socket.send(`${username} has entered the chat!`);
-  }, [socket, username]);
+  }
 
   function handleMessage(e: MessageEvent<any>) {
     setChatLog((chatLog) => [...chatLog, e.data]);
