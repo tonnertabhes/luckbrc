@@ -40,17 +40,13 @@ export default function Chat({
   }, [socket]);
 
   useEffect(() => {
-    handleUserLoadPage();
-  }, [socket, username]);
-
-  function handleUserLoadPage() {
     if (username === "") return;
     try {
       socket.send(`${username} has entered the chat!`);
     } catch (err) {
       console.log(err);
     }
-  }
+  }, [socket, username]);
 
   function handleMessage(e: MessageEvent<any>) {
     setChatLog((chatLog) => [...chatLog, e.data]);
@@ -68,13 +64,6 @@ export default function Chat({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     msg: string
   ) {
-    if (!isSocketOpen) {
-      setTimeout(
-        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-          sendMessage(e, msg),
-        1000
-      );
-    }
     e.preventDefault();
     if (message === "") return;
     if (socket === null) return;
