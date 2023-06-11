@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
 
 	"chat_app/config"
@@ -15,9 +16,14 @@ import (
 )
 
 type User struct {
-	ID       *primitive.ObjectID `json:"_id,omitempty"      bson:"_id,omitempty"`
-	Username string              `json:"username,omitempty" bson:"username,omitempty"`
-	Wallet   string              `json:"wallet,omitempty"   bson:"wallet,omitempy"`
+	ID             *primitive.ObjectID `json:"_id,omitempty"             bson:"_id,omitempty"`
+	Username       string              `json:"username,omitempty"        bson:"username,omitempty"`
+	Wallet         string              `json:"wallet,omitempty"          bson:"wallet,omitempy"`
+	NormalizedName string              `json: "normalizedName,omitempty" bson:"normalizedName,omitempty"`
+}
+
+func normalizeUsername(user User) {
+	user.NormalizedName = strings.ToLower(user.Username)
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -37,8 +43,24 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{ "message": "` + err.Error() + `" }`))
 		return
 	}
+	normalizeUsername(user)
 	collection := config.Client.Database("LUCKBRC").Collection("USERS")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	var checkUser User
+
+	err = collection.FindOne(ctx, bson.M{"normalizedName": user.NormalizedName}).Decode(&checkUser)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{ "message": "Username Already Taken!" }`))
+			return
+		}
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{ "message" : "` + err.Error() + `" }`))
+		return
+	}
 
 	res, err := collection.InsertOne(ctx, user)
 	if err != nil {
