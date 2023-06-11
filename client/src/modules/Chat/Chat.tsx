@@ -60,7 +60,11 @@ export default function Chat({
     msg: string
   ) {
     if (!isSocketOpen) {
-      () => setTimeout(sendMessage, 1000);
+      setTimeout(
+        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+          sendMessage(e, msg),
+        1000
+      );
     }
     e.preventDefault();
     if (message === "") return;
