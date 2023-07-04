@@ -22,10 +22,6 @@ type User struct {
 	NormalizedName string              `json:"normalizedName,omitempty" bson:"normalizedName,omitempty"`
 }
 
-func (user User) normalizeUsername() {
-	user.NormalizedName = strings.ToLower(user.Username)
-}
-
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -120,8 +116,25 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{ "message": "` + err.Error() + `" }`))
 		return
 	}
+	user.NormalizedName = strings.ToLower(user.Username)
 	collection := config.Client.Database("LUCKBRC").Collection("USERS")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+
+	var checkUser User
+
+	err = collection.FindOne(ctx, bson.M{"normalizedName": user.NormalizedName}).Decode(&checkUser)
+
+	if err != nil && err != mongo.ErrNoDocuments {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{ "message" : "` + err.Error() + `" }`))
+		return
+	}
+
+	if checkUser.NormalizedName == user.NormalizedName {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{ "message": "Username Already Taken!" }`))
+		return
+	}
 
 	res, err := collection.UpdateOne(ctx, bson.M{"wallet": user.Wallet}, bson.M{"$set": bson.M{"username": user.Username}})
 	if err != nil {
