@@ -19,7 +19,7 @@ type User struct {
 	ID             *primitive.ObjectID `json:"_id,omitempty"             bson:"_id,omitempty"`
 	Username       string              `json:"username,omitempty"        bson:"username,omitempty"`
 	Wallet         string              `json:"wallet,omitempty"          bson:"wallet,omitempy"`
-	NormalizedName string              `json: "normalizedName,omitempty" bson:"normalizedName,omitempty"`
+	NormalizedName string              `json:"normalizedName,omitempty" bson:"normalizedName,omitempty"`
 }
 
 func (user User) normalizeUsername() {
