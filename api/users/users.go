@@ -22,7 +22,7 @@ type User struct {
 	NormalizedName string              `json: "normalizedName,omitempty" bson:"normalizedName,omitempty"`
 }
 
-func normalizeUsername(user User) {
+func (user User) normalizeUsername() {
 	user.NormalizedName = strings.ToLower(user.Username)
 }
 
@@ -43,7 +43,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{ "message": "` + err.Error() + `" }`))
 		return
 	}
-	normalizeUsername(user)
+	user.normalizeUsername()
 	collection := config.Client.Database("LUCKBRC").Collection("USERS")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
