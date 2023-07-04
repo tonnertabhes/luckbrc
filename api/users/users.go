@@ -51,14 +51,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	err = collection.FindOne(ctx, bson.M{"normalizedName": user.NormalizedName}).Decode(&checkUser)
 
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte(`{ "message": "Username Already Taken!" }`))
-			return
-		}
+	if err != nil && err != mongo.ErrNoDocuments {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{ "message" : "` + err.Error() + `" }`))
+		return
+	}
+
+	if checkUser.NormalizedName == user.NormalizedName {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(`{ "message": "Username Already Taken!" }`))
 		return
 	}
 
