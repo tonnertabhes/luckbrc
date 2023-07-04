@@ -43,7 +43,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`{ "message": "` + err.Error() + `" }`))
 		return
 	}
-	user.normalizeUsername()
+	user.NormalizedName = strings.ToLower(user.Username)
 	collection := config.Client.Database("LUCKBRC").Collection("USERS")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
